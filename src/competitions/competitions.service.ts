@@ -76,7 +76,7 @@ export class CompetitionsService {
     return this.competitions;
   }
 
-  getAllContestByDay(id: string) {
+  getAllContestByCompetition(id: string) {
     const contests = this.contests.filter(
       (contest) => contest.competitionId === id,
     );

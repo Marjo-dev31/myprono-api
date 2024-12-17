@@ -11,7 +11,7 @@ export class CompetitionsController {
   }
 
   @Get(':id')
-  getAllContestsByDay(@Param('id') id: string) {
-    return this.competionsService.getAllContestByDay(id);
+  getAllContestsByCompetition(@Param('id') id: string) {
+    return this.competionsService.getAllContestByCompetition(id);
   }
 }

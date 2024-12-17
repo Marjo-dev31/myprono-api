@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Competition {
+  id Int @id @default(autoincrement())
+  name String @unique
+}
+
+
+
+model Contest {
+  id Int @id @default(autoincrement())
+  date DateTime
+  team1 Team @relation(fields: [team1Id], references: [id])
+  team1Id Int
+  team2 Int
+  winnerTeamId Int
+  offensiveBonus Boolean @default(false)
+  defensiveBonus Boolean @default(false)
+  competitionId Int 
+}
+
+model Team {
+  id Int @id @default(autoincrement())
+  teamName String @unique
+}
