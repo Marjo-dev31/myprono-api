@@ -1,85 +1,47 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class CompetitionsService {
-  competitions = [
-    {
-      id: '1',
-      name: 'top14',
-    },
-    {
-      id: '2',
-      name: '6nations',
-    },
-  ];
+  constructor(private readonly databaseService: DatabaseService) {}
 
-  contests = [
-    {
-      id: '1',
-      day: '1',
-      teamId1: '1',
-      teamId2: '2',
-      competitionId: '1',
-    },
-    {
-      id: '2',
-      day: '1',
-      teamId1: '3',
-      teamId2: '4',
-      competitionId: '1',
-    },
-    {
-      id: '3',
-      day: '2',
-      teamId1: '1',
-      teamId2: '3',
-      competitionId: '1',
-    },
-    {
-      id: '4',
-      day: '2',
-      teamId1: '2',
-      teamId2: '3',
-      competitionId: '1',
-    },
-    {
-      id: '1',
-      day: '1',
-      teamId1: '1',
-      teamId2: '2',
-      competitionId: '2',
-    },
-    {
-      id: '2',
-      day: '1',
-      teamId1: '3',
-      teamId2: '4',
-      competitionId: '2',
-    },
-    {
-      id: '3',
-      day: '2',
-      teamId1: '1',
-      teamId2: '3',
-      competitionId: '2',
-    },
-    {
-      id: '4',
-      day: '2',
-      teamId1: '2',
-      teamId2: '3',
-      competitionId: '2',
-    },
-  ];
-
-  getAll() {
-    return this.competitions;
+  async getAll() {
+    return this.databaseService.competition.findMany();
   }
 
-  getAllContestByCompetition(id: string) {
-    const contests = this.contests.filter(
-      (contest) => contest.competitionId === id,
-    );
-    return contests.sort((a, b) => +a.day - +b.day);
+  // getAllContestByCompetition(id: string) {
+  //   const contests = this.contests.filter(
+  //     (contest) => contest.competitionId === id,
+  //   );
+  //   return contests.sort((a, b) => +a.day - +b.day);
+  // }
+
+  async getById(id: number) {
+    return this.databaseService.competition.findUnique({
+      where: { id },
+    });
+  }
+
+  async create(createCompetitionDto: Prisma.CompetitionCreateInput) {
+    return this.databaseService.competition.create({
+      data: createCompetitionDto,
+    });
+  }
+
+  async update(
+    id: number,
+    updateCompetitionDto: Prisma.CompetitionUpdateInput,
+  ) {
+    return this.databaseService.competition.update({
+      where: { id },
+      data: updateCompetitionDto,
+    });
+  }
+
+  async remove(id: number) {
+    return this.databaseService.competition.delete({
+      where: { id },
+    });
   }
 }
