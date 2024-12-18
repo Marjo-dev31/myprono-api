@@ -14,25 +14,65 @@ datasource db {
 }
 
 model Competition {
-  id Int @id @default(autoincrement())
-  name String @unique
+  id             Int       @id @default(autoincrement())
+  name           String    @unique
+  contestsPlayed Contest[]
+  score          Score[]
 }
 
-
-
 model Contest {
-  id Int @id @default(autoincrement())
-  date DateTime
-  team1 Team @relation(fields: [team1Id], references: [id])
-  team1Id Int
-  team2 Int
-  winnerTeamId Int
-  offensiveBonus Boolean @default(false)
-  defensiveBonus Boolean @default(false)
-  competitionId Int 
+  id             Int         @id @default(autoincrement())
+  date           DateTime
+  team1          Team        @relation("HomeTeam", fields: [team1Id], references: [id])
+  team1Id        Int
+  team2          Team        @relation("AwayTeam", fields: [team2Id], references: [id])
+  team2Id        Int
+  winnerTeamId   Team        @relation("WinnerTeam", fields: [winnerTeam], references: [id])
+  winnerTeam     Int
+  offensiveBonus Boolean     @default(false)
+  defensiveBonus Boolean     @default(false)
+  competition    Competition @relation(fields: [competitionId], references: [id])
+  competitionId  Int
+  bet            Bet[]
 }
 
 model Team {
-  id Int @id @default(autoincrement())
-  teamName String @unique
+  id         Int       @id @default(autoincrement())
+  teamName   String    @unique
+  homeTeam   Contest[] @relation("HomeTeam")
+  awayTeam   Contest[] @relation("AwayTeam")
+  winnerTeam Contest[] @relation("WinnerTeam")
+  bet        Bet[]
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  firstname String
+  lastname  String
+  mail      String  @unique
+  password  String
+  pseudo    String  @unique
+  bet       Bet[]
+  score     Score[]
+}
+
+model Bet {
+  id             Int     @id @default(autoincrement())
+  contest        Contest @relation(fields: [matchId], references: [id])
+  matchId        Int
+  user           User    @relation(fields: [userId], references: [id])
+  userId         Int
+  betTeam        Team    @relation(fields: [betTeamId], references: [id])
+  betTeamId      Int
+  offensiveBonus Boolean @default(false)
+  defensiveBonus Boolean @default(false)
+}
+
+model Score {
+  id            Int         @id @default(autoincrement())
+  total         Int         @default(0)
+  competition   Competition @relation(fields: [competitionId], references: [id])
+  competitionId Int
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int
 }
