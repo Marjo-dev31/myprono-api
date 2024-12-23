@@ -44,4 +44,10 @@ export class CompetitionsService {
       where: { id },
     });
   }
+
+  async getContestsByCompetition(id: number) {
+    return this.databaseService.contest.findMany({
+      where: { competitionId: id },
+    });
+  }
 }

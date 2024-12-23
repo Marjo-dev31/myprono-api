@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,26 +17,31 @@ model Competition {
 model Contest {
   id             Int         @id @default(autoincrement())
   date           DateTime
-  team1          Team        @relation("HomeTeam", fields: [team1Id], references: [id])
   team1Id        Int
-  team2          Team        @relation("AwayTeam", fields: [team2Id], references: [id])
   team2Id        Int
-  winnerTeamId   Team        @relation("WinnerTeam", fields: [winnerTeam], references: [id])
-  winnerTeam     Int
+  winnerTeam     Int?
   offensiveBonus Boolean     @default(false)
   defensiveBonus Boolean     @default(false)
-  competition    Competition @relation(fields: [competitionId], references: [id])
   competitionId  Int
   bet            Bet[]
+  competition    Competition @relation(fields: [competitionId], references: [id])
+  team1          Team        @relation("HomeTeam", fields: [team1Id], references: [id])
+  team2          Team        @relation("AwayTeam", fields: [team2Id], references: [id])
+  winnerTeamId   Team?       @relation("WinnerTeam", fields: [winnerTeam], references: [id], onDelete: Restrict)
+
+  @@index([competitionId], map: "Contest_competitionId_fkey")
+  @@index([team1Id], map: "Contest_team1Id_fkey")
+  @@index([team2Id], map: "Contest_team2Id_fkey")
+  @@index([winnerTeam], map: "Contest_winnerTeam_fkey")
 }
 
 model Team {
   id         Int       @id @default(autoincrement())
   teamName   String    @unique
+  bet        Bet[]
   homeTeam   Contest[] @relation("HomeTeam")
   awayTeam   Contest[] @relation("AwayTeam")
   winnerTeam Contest[] @relation("WinnerTeam")
-  bet        Bet[]
 }
 
 model User {
@@ -58,21 +57,28 @@ model User {
 
 model Bet {
   id             Int     @id @default(autoincrement())
-  contest        Contest @relation(fields: [matchId], references: [id])
   matchId        Int
-  user           User    @relation(fields: [userId], references: [id])
   userId         Int
-  betTeam        Team    @relation(fields: [betTeamId], references: [id])
   betTeamId      Int
   offensiveBonus Boolean @default(false)
   defensiveBonus Boolean @default(false)
+  betTeam        Team    @relation(fields: [betTeamId], references: [id])
+  contest        Contest @relation(fields: [matchId], references: [id])
+  user           User    @relation(fields: [userId], references: [id])
+
+  @@index([betTeamId], map: "Bet_betTeamId_fkey")
+  @@index([matchId], map: "Bet_matchId_fkey")
+  @@index([userId], map: "Bet_userId_fkey")
 }
 
 model Score {
   id            Int         @id @default(autoincrement())
   total         Int         @default(0)
-  competition   Competition @relation(fields: [competitionId], references: [id])
   competitionId Int
-  user          User        @relation(fields: [userId], references: [id])
   userId        Int
+  competition   Competition @relation(fields: [competitionId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
+
+  @@index([competitionId], map: "Score_competitionId_fkey")
+  @@index([userId], map: "Score_userId_fkey")
 }

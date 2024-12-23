@@ -13,7 +13,7 @@ CREATE TABLE `Contest` (
     `date` DATETIME(3) NOT NULL,
     `team1Id` INTEGER NOT NULL,
     `team2Id` INTEGER NOT NULL,
-    `winnerTeam` INTEGER NOT NULL,
+    `winnerTeam` INTEGER,
     `offensiveBonus` BOOLEAN NOT NULL DEFAULT false,
     `defensiveBonus` BOOLEAN NOT NULL DEFAULT false,
     `competitionId` INTEGER NOT NULL,

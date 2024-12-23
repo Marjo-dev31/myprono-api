@@ -46,4 +46,9 @@ export class CompetitionsController {
   remove(@Param('id') id: string) {
     return this.competitionsService.remove(+id);
   }
+
+  @Get(':id/contests')
+  getContestsByCompetition(@Param('id') id: string) {
+    return this.competitionsService.getContestsByCompetition(+id);
+  }
 }
