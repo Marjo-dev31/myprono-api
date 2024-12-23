@@ -15,7 +15,14 @@ export class UserService {
   }
 
   async create(createUserDto: Prisma.UserCreateInput) {
-    return this.databaseService.user.create({ data: createUserDto });
+    const newUser = this.databaseService.user.create({ data: createUserDto });
+    this.databaseService.score.createMany({
+      data: [
+        { total: 0, competitionId: 1, userId: (await newUser).id },
+        { total: 0, competitionId: 2, userId: (await newUser).id },
+      ],
+    });
+    return newUser;
   }
 
   async update(id: number, updateUserDto: Prisma.UserUpdateInput) {

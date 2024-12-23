@@ -45,9 +45,13 @@ export class CompetitionsService {
     });
   }
 
+  // trouver moyen de selectionner la prochaine journée
   async getContestsByCompetition(id: number) {
     return this.databaseService.contest.findMany({
-      where: { competitionId: id },
+      take: 7,
+      where:
+       { AND: {competitionId: id}, {} },
+      orderBy: { date: 'asc'}
     });
   }
 }
