@@ -49,9 +49,8 @@ export class CompetitionsService {
   async getContestsByCompetition(id: number) {
     return this.databaseService.contest.findMany({
       take: 7,
-      where:
-       { AND: {competitionId: id}, {} },
-      orderBy: { date: 'asc'}
+      where: { AND: [{ competitionId: id }, { date: { gte: new Date() } }] },
+      orderBy: { date: 'asc' },
     });
   }
 }
