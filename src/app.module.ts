@@ -5,9 +5,10 @@ import { CompetitionsModule } from './competitions/competitions.module';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { ContestsModule } from './contests/contests.module';
+import { ScoreModule } from './score/score.module';
 
 @Module({
-  imports: [CompetitionsModule, DatabaseModule, UserModule, ContestsModule],
+  imports: [CompetitionsModule, DatabaseModule, UserModule, ContestsModule, ScoreModule],
   controllers: [AppController],
   providers: [AppService],
 })
