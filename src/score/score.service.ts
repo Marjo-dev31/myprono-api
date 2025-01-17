@@ -12,4 +12,14 @@ export class ScoreService {
   async getByUser(id: number) {
     return this.databaseService.score.findFirst({ where: { userId: id } });
   }
+
+  async updateScore(userId: number, competitionId: number) {
+    const score = this.databaseService.score.findFirst({
+      where: { AND: [{ userId: userId }, { competitionId: competitionId }] },
+    });
+    return this.databaseService.score.update({
+      where: { id: (await score).id },
+      data: { total: { increment: 1 } },
+    });
+  }
 }
