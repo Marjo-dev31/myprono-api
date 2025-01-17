@@ -13,6 +13,15 @@ export class ScoreService {
     return this.databaseService.score.findFirst({ where: { userId: id } });
   }
 
+  async getTotal(userId: number) {
+    return this.databaseService.score.groupBy({
+      by: { userId: userId },
+      _sum: {
+        total: true,
+      },
+    });
+  }
+
   async updateScore(userId: number, competitionId: number) {
     const score = this.databaseService.score.findFirst({
       where: { AND: [{ userId: userId }, { competitionId: competitionId }] },
